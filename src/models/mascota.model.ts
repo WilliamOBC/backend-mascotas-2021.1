@@ -1,6 +1,26 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import {Raza} from './raza.model';
+import {HistoriaMedica} from './historia-medica.model';
+import {Ciudad} from './ciudad.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fk_raza_id_mascota: {
+        name: 'fk_raza_id_mascota',
+        entity: 'Raza',
+        entityKey: 'id',
+        foreignKey: 'razaId',
+      },
+      fk_ciudad_id_mascota: {
+        name: 'fk_ciudad_id_mascota',
+        entity: 'Ciudad',
+        entityKey: 'id',
+        foreignKey: 'ciudadId',
+      },
+    },
+  },
+})
 export class Mascota extends Entity {
   @property({
     type: 'number',
@@ -39,6 +59,14 @@ export class Mascota extends Entity {
   })
   imagen: string;
 
+  @belongsTo(() => Raza)
+  razaId: number;
+
+  @hasMany(() => HistoriaMedica)
+  historiasMedicas: HistoriaMedica[];
+
+  @belongsTo(() => Ciudad)
+  ciudadId: number;
 
   constructor(data?: Partial<Mascota>) {
     super(data);
